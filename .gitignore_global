@@ -1,0 +1,19 @@
+*~
+.DS_Store
+
+
+### https://raw.github.com/github/gitignore//Global/VisualStudioCode.gitignore
+.vscode/*
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
+
+*.code-workspace
+
+# direnv
+.envrc
+
+.env
+
+.venv

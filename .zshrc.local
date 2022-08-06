@@ -1,0 +1,103 @@
+# 作業端末用の設定なので、必要に応じて以下を手動実行
+# ln -snfv ~/dotfiles/.zshrc.local ~
+
+
+## ※ mac用
+### zshのテーマ設定
+fpath+=$HOME/.zsh/pure
+autoload -U promptinit; promptinit
+prompt pure #シンプルテーマ
+
+
+### 環境変数
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+export CLICOLOR=1
+export LSCOLORS=DxGxcxdxCxegedabagacad
+export PATH="$HOME/.linuxbrew/bin:$HOME/src:$PATH"
+export LD_LIBRARY_PATH="$HOME/.linuxbrew/lib:$LD_LIBRARY_PATH"
+export ORACLE_HOME=/usr/local/sqlplus/instantclient_19_8
+export PATH=$ORACLE_HOME:$PATH
+export PIPENV_VENV_IN_PROJECT=true # pipenvの設定
+eval "$(pyenv init -)"
+export PATH="$PATH:/opt/ghkw/"
+export PATH="$HOME/.serverless/bin:$PATH"
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
+
+### alias
+alias alp='aws sso login --profile prd'
+alias ald='aws sso login --profile dev'
+alias dps='docker ps --format "table {{.ID}} {{.Names}}\t{{.Image}}\t{{.Ports}}"'
+alias dpsa='docker ps -a --format "table {{.ID}} {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"'
+alias me='memo edit'
+alias s="kitty +kitten ssh"
+function iid() {
+  aws ec2 describe-instances --query 'Reservations[].Instances[].InstanceId' --output text --profile prd --filters Name=tag-value,Values=$1
+}
+
+### 補完機能
+autoload -Uz compinit
+compinit -u
+if [ -e /usr/local/share/zsh-completions ]; then
+  fpath=(/usr/local/share/zsh-completions $fpath)
+fi
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' # 小文字でも大文字にマッチさせる
+setopt list_packed # 補完候補を詰めて表示
+zstyle ':completion:*' list-colors '' # カラー表示
+# fishっぽい補完
+# gitのサブモジュール設定しておく
+source ~/local/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+### for fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--color=fg+:11 --height 70% --reverse --select-1 --exit-0 --multi'
+
+### fzf-cdr
+alias cdd='fzf-cdr'
+function fzf-cdr() {
+    target_dir=`cdr -l | sed 's/^[^ ][^ ]*  *//' | fzf`
+    target_dir=`echo ${target_dir/\~/$HOME}`
+    if [ -n "$target_dir" ]; then
+        cd $target_dir
+    fi
+}
+autoload -Uz is-at-least
+if is-at-least 4.3.11
+then
+  autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+  add-zsh-hook chpwd chpwd_recent_dirs
+  zstyle ':chpwd:*'      recent-dirs-max 500
+  zstyle ':chpwd:*'      recent-dirs-default yes
+  zstyle ':completion:*' recent-dirs-insert both
+fi
+
+### fkill - kill process
+alias cdd='fkill'
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+### for pet
+function prev() {
+  PREV=$(fc -lrn | head -n 1)
+  sh -c "pet new `printf %q "$PREV"`"
+}
+function pet-select() {
+  BUFFER=$(pet search --query "$LBUFFER")
+  CURSOR=$#BUFFER
+  zle redisplay
+}
+zle -N pet-select
+bindkey '^j' pet-select
+
+### for aws ssm start-session
+alias ss='ssm-start-session'
+function ssm-start-session(){
+  aws ssm start-session --target $1 --profile prd
+}

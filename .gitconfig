@@ -1,0 +1,52 @@
+[include]
+    path = ~/.gitconfig.local
+[core]
+    excludesfile = ~/.gitignore_global
+[alias]
+    a = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^ ]*\\) \\(.*\\)/\\1\\\t => \\2/' | sort
+    aa = !git add . && git add -u && git status
+    alias = !git config --get-regexp '^alias\\.' | sed 's/alias\\.\\([^ ]*\\) \\(.*\\)/\\1\\\t => \\2/' | sort
+    br = branch
+    bra = branch -a
+    coa = commit --amend
+    cob = !git checkout `git branch | peco`
+    com = commit
+    co = checkout
+    d  = diff
+    dc = diff --cached
+    dw = diff --word-diff=color
+    dwi = diff -w -ignore-blank-lines
+    dryrun = !git add -n .&& git diff --name-only
+    f = fetch
+    fa = fetch --all
+    fc = commit --allow-empty
+    graph = log --graph --date-order --all --pretty=format:'%h %C(green)%ad%C(cyan reverse)%cn%C(reset) %C(white bold)%s %C(red reverse)%w(80)%d' --date=short
+    l = log --name-status --decorate=short --pretty=format:'%C(yellow)%h %C(cyan)%ad %Cgreen%an %C(auto)%d%Creset %s %C(blue)%b' --date=iso-local
+    lp = log -p --stat=300 --decorate=short --pretty=format:'%C(yellow)%h %C(cyan)%ar %Cgreen%an %C(auto)%d%Creset %s %C(blue)%b'
+    lpw = log --color-words -p --stat=300 --decorate=short --pretty=format:'%C(yellow)%h %C(cyan)%ar %Cgreen%an %C(auto)%d%Creset %s %C(blue)%b'
+    pl = pull
+    fc = commit --allow-empty
+    push = push origin HEAD
+    s = status -sb
+    save = stash save -u
+[color]
+    branch = auto
+    diff = auto
+    grep = auto
+    interactive = auto
+    pager = true
+    showbranch = auto
+    status = auto
+    ui = auto
+[fetch]
+    prune = true
+[push]
+    default = current
+[merge]
+    ff = false
+[pull]
+    ff = only
+[pager]
+    log = diff-highlight | less
+    show = diff-highlight | less
+    diff = diff-highlight | less
