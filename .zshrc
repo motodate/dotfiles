@@ -50,6 +50,7 @@ alias vi='vim'
 alias zshrc='vi ~/.zshrc'
 alias ..2='cd ../..'
 alias ..3='cd ../../..'
+alias ssh="TERM=xterm /usr/bin/ssh"
 
 ### その他
 # tmux
