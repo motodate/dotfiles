@@ -114,4 +114,5 @@ ls_abbrev() {
 ### 環境変数 (ここによく使うディレクトリのパスととか書く)
 
 ### load local functions
+### .zshrc.local は Google Drive で管理するようにした
 [ -r ~/.zshrc.local ] && source ~/.zshrc.local
