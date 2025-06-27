@@ -15,7 +15,7 @@ done
 
 # .zshrc.local は Google Drive で管理するようにした
 # 作業PC交換時にはGoogle Driveの同期ツールを導入してから本スクリプトを実行すること
-SOURCE="$HOME/local_info/.zshrc.local"
+SOURCE="$HOME/local_info/dotfiles/.zshrc.local"
 TARGET="$HOME/.zshrc.local"
 BACKUP="${TARGET}.backup"
 if [[ -e "$SOURCE" ]]; then
